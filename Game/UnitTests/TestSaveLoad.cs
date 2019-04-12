@@ -15,7 +15,6 @@ namespace UnitTests
         [TestCase(1, "doddi", "65", 32)]
         [TestCase(1, "stiv", "asd", 14)]
         [TestCase(1, "stiv", "4342", 43)]
-        [TestCase(1, "stiv", "d12gfg3", 14)]
         public void TestSave(int id, string name, string pass, int score)
         {
             Player player = new Player() { PlayerId = id, Name = name, Password = pass, Score = score };
@@ -24,6 +23,20 @@ namespace UnitTests
             Assert.AreEqual(name, player.Name);
             Assert.AreEqual(pass, player.Password);
             Assert.AreEqual(score, player.Score);
+        }
+
+        [Test]
+        [TestCase("tree", "234")]
+        [TestCase("ball", "123")]
+        [TestCase("light", "65")]
+        public void TestIsExist(string name, string pass)
+        {
+            Player player = new Player() { Name = name, Password = pass, Score = 0 };
+            Assert.AreEqual(SaveLoader.IsPlayerExist(name), false);
+            player = SaveLoader.Save(player);
+            Assert.AreEqual(SaveLoader.IsPlayerExist(name), true);
+            SaveLoader.Remove(player);
+            Assert.AreEqual(SaveLoader.IsPlayerExist(name), false);
         }
     }
 }

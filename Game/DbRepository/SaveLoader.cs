@@ -64,5 +64,15 @@ namespace DbRepository
                 return false;
             }
         }
+
+        public static void Remove(Player player)
+        {
+            using (PlayerContext _playerContext = new PlayerContext())
+            {
+                var tempPlayer = _playerContext.Players.FirstOrDefault(x => x.Name == player.Name);
+                _playerContext.Players.Remove(tempPlayer);
+                _playerContext.SaveChanges();
+            }
+        }
     }
 }
