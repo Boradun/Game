@@ -28,8 +28,10 @@ namespace DbRepository
             {
                 if (IsPlayerExist(player.Name))
                 {
-                    _playerContext.Players.First(x => x.Name == player.Name).Score = player.Score;
-
+                    if (_playerContext.Players.FirstOrDefault(x => x.Name == player.Name && x.Password == player.Password) != null)
+                    {
+                        _playerContext.Players.FirstOrDefault(x => x.Name == player.Name && x.Password == player.Password).Score = player.Score;
+                    }
                 }
                 else
                 {
