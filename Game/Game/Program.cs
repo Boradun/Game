@@ -10,6 +10,8 @@ namespace Game
     {
         static void Main(string[] args)
         {
+            GameController game = new GameController();
+            game.MainMenu();
         }
     }
 }
