@@ -1,5 +1,4 @@
 ﻿using DbRepository;
-using PlayerModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +11,13 @@ namespace Game
 {
     class GameController
     {
-        Player _player1;
-        Player _player2;
-        int MinNumber;
-        int MaxNumber;
-        int SecretNumber;
 
+        Game _game = new Game();
+        string _nameThatNotSave = "Гость";
         internal GameController()
         {
-            _player1 = new Player() { Name = "Гость" };
-            _player2 = new Player() { Name = "Гость" };
+            _game.Player1 = new Player() { Name = "Гость" };
+            _game.Player2 = new Player() { Name = "Гость" };
         }
 
         //главное меню игры
@@ -31,7 +27,7 @@ namespace Game
             do
             {
                 Console.Clear();
-                Console.WriteLine($"1.Начать новую игру {_player1.Name}  против {_player2.Name}");
+                Console.WriteLine($"1.Начать новую игру {_game.Player1.Name}  против {_game.Player2.Name}");
                 Console.WriteLine($"2.Загрузить первого игрока \n3.Загрузить второго игрока");
                 Console.WriteLine($"4.Создать нового игрока");
                 Console.WriteLine($"5.Показать статистику первого игрока\n6.показать статистику второго игрока");
@@ -46,12 +42,12 @@ namespace Game
                         }
                     case "2":
                         {
-                            _player1 = LoadPlayer();
+                            _game.Player1 = LoadPlayer();
                             break;
                         }
                     case "3":
                         {
-                            _player2 = LoadPlayer();
+                            _game.Player2 = LoadPlayer();
                             break;
                         }
                     case "4":
@@ -61,12 +57,12 @@ namespace Game
                         }
                     case "5":
                         {
-                            WritePlayer(_player1);
+                            WritePlayer(_game.Player1);
                             break;
                         }
                     case "6":
                         {
-                            WritePlayer(_player2);
+                            WritePlayer(_game.Player2);
                             break;
                         }
                     case "7":
@@ -88,19 +84,20 @@ namespace Game
         {
             Console.Clear();
             Console.WriteLine($"Раунд 1:");
-            Round(_player1, _player2);
+            Round(_game.Player1, _game.Player2);
             Console.Clear();
             Console.WriteLine($"Раунд 2:");
-            Round(_player2, _player1);
+            Round(_game.Player2, _game.Player1);
         }
 
         //проводит раунд в игре
         void Round(Player playerComeUP, Player playerThatSolve)
         {
+
             InputNumbers(playerComeUP);
             Console.Clear();
             bool result = GuessNumber(playerThatSolve);
-            if (result&&playerThatSolve.Name!="Гость")
+            if (result && playerThatSolve.Name != _nameThatNotSave)
             {
                 SaveLoader.Save(playerThatSolve);
             }
@@ -110,10 +107,10 @@ namespace Game
         //принимает игрока который отгадывает число
         bool GuessNumber(Player player)
         {
-            Console.WriteLine($"{player.Name} вам нужно отгадать число x, где {MinNumber}<= x <={MaxNumber}: ");
+            Console.WriteLine($"{player.Name} вам нужно отгадать число x, где {_game.MinNumber}<= x <={_game.MaxNumber}: ");
             int attempt;
             int attemptLast = 1;
-            for (int temp = MaxNumber - MinNumber; temp > 1; temp = temp / 2)
+            for (int temp = _game.MaxNumber - _game.MinNumber; temp > 1; temp = temp / 2)
             {
                 attemptLast++;
             }
@@ -122,7 +119,7 @@ namespace Game
             {
                 attempt = ReadNumberFromConsole();
 
-                if (attempt == SecretNumber)
+                if (attempt == _game.SecretNumber)
                 {
                     Console.WriteLine($"Правильно! получено {attemptLast} очков, \nНажмите любую клавишу для продолжения...");
                     player.Score += attemptLast;
@@ -134,7 +131,7 @@ namespace Game
                     if (attemptLast > 0)
                     {
                         Console.WriteLine($"Не правильно, попробуйте еще раз. Осталось попыток {attemptLast--}");
-                        if (attempt > SecretNumber)
+                        if (attempt > _game.SecretNumber)
                         {
                             Console.WriteLine($"Загаданное число меньше {attempt}");
                         }
@@ -159,14 +156,14 @@ namespace Game
         {
             Console.Clear();
             Console.WriteLine($"Игрок {player.Name} введите минимальное число, которое Вы можете загадать. Если не ввести, присвоится число 0:");
-            MinNumber = ReadNumberFromConsole();
+            _game.MinNumber = ReadNumberFromConsole();
             Console.WriteLine($"Игрок {player.Name} введите максимальное число, которое Вы можете загадать. Если не ввести, присвоится число 0:");
             do
             {
-                MaxNumber = ReadNumberFromConsole();
-                if (MaxNumber <= MinNumber)
+                _game.MaxNumber = ReadNumberFromConsole();
+                if (_game.MaxNumber <= _game.MinNumber)
                 {
-                    Console.WriteLine($"{player.Name}, максимальное число должно быть больше {MinNumber}\n попробуйте еще раз:");
+                    Console.WriteLine($"{player.Name}, максимальное число должно быть больше {_game.MinNumber}\n попробуйте еще раз:");
                 }
                 else
                 {
@@ -176,9 +173,9 @@ namespace Game
             do
             {
                 Console.WriteLine($"Игрок {player.Name} введите число, которое Вы загадываете,\n" +
-                    $"оно должно быть больше или равно {MinNumber}, и меньше или равно {MaxNumber}:");
-                SecretNumber = ReadNumberFromConsole();
-                if (SecretNumber >= MinNumber && SecretNumber <= MaxNumber)
+                    $"оно должно быть больше или равно {_game.MinNumber}, и меньше или равно {_game.MaxNumber}:");
+                _game.SecretNumber = ReadNumberFromConsole();
+                if (_game.SecretNumber >= _game.MinNumber && _game.SecretNumber <= _game.MaxNumber)
                 {
                     break;
                 }
@@ -232,7 +229,7 @@ namespace Game
             }
             else
             {
-                return new Player(){ Name="Гость", Score=0};
+                return new Player() { Name = "Гость", Score = 0 };
             }
         }
 

@@ -61,7 +61,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestSaveLoad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -76,10 +75,6 @@
     <ProjectReference Include="..\Game\Game.csproj">
       <Project>{e97f43f1-3229-423a-857a-2a62b410eb8c}</Project>
       <Name>Game</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlayerModel\PlayerModel.csproj">
-      <Project>{1232f3d0-07c3-493e-ba54-a14934b31ee9}</Project>
-      <Name>PlayerModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
