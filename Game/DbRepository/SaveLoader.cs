@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DbRepository
 {
-    public static class SaveLoader
+    public class SaveLoader : ISaveLoader
     {
         public class PlayerContext : DbContext
         {
@@ -17,11 +17,9 @@ namespace DbRepository
             public DbSet<Player> Players { get; set; }
         }
 
-
-
         //сохранит игрока в базу, если существует
         //создаст новую запись, если не существует
-        public static Player Save(Player player)
+        public Player Save(Player player)
         {
             using (PlayerContext _playerContext = new PlayerContext())
             {
@@ -43,7 +41,7 @@ namespace DbRepository
         }
 
         //возвращает игрока из базы, null если игрока не найдено
-        public static Player Load(string PlayerName, string PlayerPassword)
+        public Player Load(string PlayerName, string PlayerPassword)
         {
             using (PlayerContext _playerContext = new PlayerContext())
             {
@@ -51,7 +49,7 @@ namespace DbRepository
             }
         }
 
-        public static bool IsPlayerExist(string playerName)
+        public bool IsPlayerExist(string playerName)
         {
             using (PlayerContext _playerContext = new PlayerContext())
             {
@@ -64,7 +62,7 @@ namespace DbRepository
             }
         }
 
-        public static void Remove(Player player)
+        public void Remove(Player player)
         {
             using (PlayerContext _playerContext = new PlayerContext())
             {
