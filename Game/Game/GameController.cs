@@ -9,15 +9,13 @@ using System.Data.Entity;
 
 namespace Game
 {
-    public class GameController
+    class GameController
     {
-        //  по хорошему должен передаваться в контруктор.
-        public ISaveLoader SaveLoader;
+
         Game _game = new Game();
         string _nameThatNotSave = "Гость";
-        public GameController()
+        internal GameController()
         {
-            SaveLoader = new SaveLoader();
             _game.Player1 = new Player() { Name = "Гость" };
             _game.Player2 = new Player() { Name = "Гость" };
         }
@@ -214,7 +212,7 @@ namespace Game
 
         //загрузка игрока из базы
         //вернет null если такого игрока нет
-        public Player LoadPlayer()
+        Player LoadPlayer()
         {
             string name;
             string password;
