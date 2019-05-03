@@ -9,12 +9,13 @@ using System.Data.Entity;
 
 namespace Game
 {
-    class GameController
+    public class GameController
     {
 
         Game _game = new Game();
         string _nameThatNotSave = "Гость";
-        internal GameController()
+        public ISaveLoader _saveLoader = new SaveLoader();
+        public GameController()
         {
             _game.Player1 = new Player() { Name = "Гость" };
             _game.Player2 = new Player() { Name = "Гость" };
@@ -91,7 +92,7 @@ namespace Game
         }
 
         //проводит раунд в игре
-        void Round(Player playerComeUP, Player playerThatSolve)
+        public void Round(Player playerComeUP, Player playerThatSolve)
         {
 
             InputNumbers(playerComeUP);
@@ -99,7 +100,7 @@ namespace Game
             bool result = GuessNumber(playerThatSolve);
             if (result && playerThatSolve.Name != _nameThatNotSave)
             {
-                SaveLoader.Save(playerThatSolve);
+                _saveLoader.Save(playerThatSolve);
             }
         }
 
@@ -187,7 +188,7 @@ namespace Game
         }
 
         //создает нового игрока
-        Player CreateNewPlayer()
+        public Player CreateNewPlayer()
         {
             Player _newPlayer = new Player();
             Console.Clear();
@@ -195,12 +196,12 @@ namespace Game
             {
                 Console.WriteLine("Введите имя нового игрока:");
                 _newPlayer.Name = Console.ReadLine();
-                if (!SaveLoader.IsPlayerExist(_newPlayer.Name))
+                if (!_saveLoader.IsPlayerExist(_newPlayer.Name))
                 {
                     Console.WriteLine($"{_newPlayer.Name} ведите пароль:");
                     _newPlayer.Password = Console.ReadLine();
                     _newPlayer.Score = 0;
-                    SaveLoader.Save(_newPlayer);
+                    _saveLoader.Save(_newPlayer);
                     return _newPlayer;
                 }
                 else
@@ -212,7 +213,7 @@ namespace Game
 
         //загрузка игрока из базы
         //вернет null если такого игрока нет
-        Player LoadPlayer()
+        public Player LoadPlayer()
         {
             string name;
             string password;
@@ -222,7 +223,7 @@ namespace Game
             name = Console.ReadLine();
             Console.WriteLine("Введите пароль:");
             password = Console.ReadLine();
-            player = SaveLoader.Load(name, password);
+            player = _saveLoader.Load(name, password);
             if (player != null)
             {
                 return player;
